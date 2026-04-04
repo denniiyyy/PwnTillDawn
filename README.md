@@ -33,6 +33,9 @@ sudo openvpn PwnTillDawn.ovpn
 
 Wait until you see `Initialization Sequence Completed` in the terminal output — this confirms the VPN tunnel is active and you are inside the PwnTillDawn network range (`10.150.150.0/24`).
 
+![alt text]()
+![alt text]()
+
 ![VPN Connection](screenshots/224956.png)
 ![VPN Initialized](screenshots/225024.png)
 
